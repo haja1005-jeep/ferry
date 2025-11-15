@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>전남 여객선 터미널 지도 (오늘 운항표)</title>
+  <style>
+    body { margin:0; font-family:system-ui, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; }
+    header {
+      position:fixed; top:0; left:0; right:0; z-index:10;
+      background:#ffffffee; backdrop-filter: blur(8px);
+      padding:8px 12px; display:flex; gap:8px; align-items:center;
+      box-shadow:0 2px 4px rgba(0,0,0,0.06);
+    }
+    #map { position:absolute; top:56px; left:0; right:0; bottom:0; }
+
+    select, button {
+      padding:6px 10px; border-radius:6px; border:1px solid #ddd; font-size:14px;
+    }
+    button { cursor:pointer; }
+
+    .info-list { margin-top:6px; max-height:180px; overflow-y:auto; }
+    .info-item { font-size:12px; padding:4px 0; border-bottom:1px solid #eee; }
+    .info-item strong { font-size:12px; }
+    .badge {
+      display:inline-block; padding:1px 4px; border-radius:3px;
+      font-size:11px; margin-left:4px;
+      border:1px solid #ccc;
+    }
+    .badge-status-출항 { border-color:#22c55e; color:#16a34a; }
+    .badge-status-결항 { border-color:#ef4444; color:#b91c1c; }
+    .badge-status-지연 { border-color:#f97316; color:#c2410c; }
+  </style>
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=257fdd3647dd6abdb05eae8681106514"></script>
+</head>
+<body>
+  <header>
+    <strong>전남 여객선 터미널</strong>
+    <select id="terminalSelect">
+      <option value="">터미널 선택</option>
+      <option value="JN-SA-002">가룡선착장</option>
+      <option value="JN-SA-001">암태 남강선착장</option>
+      <option value="JN-SA-004">비금 가산여객선터미널</option>
+    </select>
+    <button id="locBtn">내 위치로</button>
+  </header>
+  <div id="map"></div>
+
+  <script>
+    // -------------------------
+    // 1. 터미널 / 항로 기본 데이터
+    // -------------------------
+    const terminals = {
+      "JN-SA-002": {
+        name: "가룡선착장",
+        lat: 34.80,   // TODO: 실제 좌표로 수정
+        lng: 126.25,
+        routes: ["RT-GARONG-SINI"]
+      },
+      "JN-SA-001": {
+        name: "암태 남강선착장",
+        lat: 34.86,
+        lng: 126.15,
+        routes: ["RT-AMTAE-BIGEUM"]
+      },
+      "JN-SA-004": {
+        name: "비금 가산여객선터미널",
+        lat: 34.77,
+        lng: 125.96,
+        routes: ["RT-AMTAE-BIGEUM"]
+      }
+    };
+
+    // -------------------------
+    // 2. 오늘 정기 시간표 (임시 하드코딩)
+    //    -> 나중에 /api/timetables?terminal=JN-SA-002 로 교체
+    // -------------------------
+    const timetablesByTerminal = {
+      "JN-SA-002": [
+        { route_code:"RT-GARONG-SINI", trip_no:"1", depart_time:"07:20", arrive_time:"09:00", arrive_place:"신의도(송도·병풍)", notes:"" },
+        { route_code:"RT-GARONG-SINI", trip_no:"2", depart_time:"10:40", arrive_time:"12:21", arrive_place:"신의도(송도·병풍)", notes:"" },
+        { route_code:"RT-GARONG-SINI", trip_no:"3", depart_time:"14:00", arrive_time:"15:40", arrive_place:"신의도(송도·병풍)", notes:"" },
+        { route_code:"RT-GARONG-SINI", trip_no:"4", depart_time:"16:00", arrive_time:"17:41", arrive_place:"신의도(송도·병풍)", notes:"" }
+      ],
+      "JN-SA-001": [
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"1", depart_time:"06:40", arrive_time:"07:20", arrive_place:"비금 가산", notes:"수치 06:15 경유" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"4", depart_time:"08:00", arrive_time:"08:40", arrive_place:"비금 가산", notes:"" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"7", depart_time:"10:30", arrive_time:"11:10", arrive_place:"비금 가산", notes:"" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"11", depart_time:"14:00", arrive_time:"14:40", arrive_place:"비금 가산", notes:"" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"13", depart_time:"15:00", arrive_time:"15:40", arrive_place:"비금 가산", notes:"" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"15", depart_time:"17:00", arrive_time:"18:00", arrive_place:"비금 가산", notes:"수치 17:35 경유 (목·금)", weekday_type:"목·금" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"18", depart_time:"20:10", arrive_time:"20:50", arrive_place:"비금 가산", notes:"야간편", weekday_type:"매일" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"19", depart_time:"22:00", arrive_time:"22:50", arrive_place:"비금 가산", notes:"야간편", weekday_type:"매일" }
+      ],
+      "JN-SA-004": [
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"2", depart_time:"07:00", arrive_time:"07:40", arrive_place:"암태 남강", notes:"" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"5", depart_time:"09:00", arrive_time:"09:40", arrive_place:"암태 남강", notes:"" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"8", depart_time:"11:20", arrive_time:"12:00", arrive_place:"암태 남강", notes:"" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"12", depart_time:"15:00", arrive_time:"15:40", arrive_place:"암태 남강", notes:"" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"14", depart_time:"16:20", arrive_time:"17:35", arrive_place:"암태 남강", notes:"사치 16:55 경유 (목·금만)" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"16", depart_time:"18:30", arrive_time:"19:10", arrive_place:"암태 남강", notes:"" },
+        { route_code:"RT-AMTAE-BIGEUM", trip_no:"17", depart_time:"19:15", arrive_time:"19:55", arrive_place:"암태 남강", notes:"수치 20:20 경유" }
+      ]
+    };
+
+    // -------------------------
+    // 3. 실시간 정보 (KOMSA) 더미 데이터
+    //    -> 나중에 /api/realtime?terminal=... 로 교체
+    // -------------------------
+    const realtimeByTerminal = {
+      "JN-SA-002": [
+        { route_code:"RT-GARONG-SINI", departure_time:"10:40", status:"출항" },
+        { route_code:"RT-GARONG-SINI", departure_time:"14:00", status:"대기" },
+        { route_code:"RT-GARONG-SINI", departure_time:"16:00", status:"결항" }
+      ],
+      "JN-SA-001": [
+        { route_code:"RT-AMTAE-BIGEUM", departure_time:"14:00", status:"출항" }
+      ],
+      "JN-SA-004": [
+        { route_code:"RT-AMTAE-BIGEUM", departure_time:"16:20", status:"지연" }
+      ]
+    };
+
+    function getStatusBadge(terminalCode, departTime) {
+      const list = realtimeByTerminal[terminalCode] || [];
+      const item = list.find(r => r.departure_time === departTime);
+      if (!item) return "";
+
+      const cls = "badge-status-" + (item.status || "").replace(/ /g, "");
+      return `<span class="badge ${cls}">${item.status}</span>`;
+    }
+
+    // -------------------------
+    // 4. 유틸: HH:MM -> 분
+    // -------------------------
+    function timeToMinutes(hhmm) {
+      const [h, m] = hhmm.split(":").map(Number);
+      return h * 60 + m;
+    }
+
+    function getNowMinutes() {
+      const now = new Date();
+      return now.getHours() * 60 + now.getMinutes();
+    }
+
+    // -------------------------
+    // 5. 카카오맵 초기화
+    // -------------------------
+    const map = new kakao.maps.Map(document.getElementById('map'), {
+      center: new kakao.maps.LatLng(34.85, 126.1),
+      level: 9
+    });
+
+    const markers = {};
+    const infowindows = {};
+
+    function openInfoWindow(code) {
+      const t = terminals[code];
+      if (!t) return;
+
+      const todayMinutes = getNowMinutes();
+      const timetable = (timetablesByTerminal[code] || [])
+        .map(item => ({
+          ...item,
+          departMin: timeToMinutes(item.depart_time)
+        }))
+        .filter(item => item.departMin >= todayMinutes - 5) // 이미 출발한 지 5분 지난 건 숨김
+        .sort((a, b) => a.departMin - b.departMin)
+        .slice(0, 6); // 최대 6개만 표시
+
+      let listHtml = "";
+
+      if (timetable.length === 0) {
+        listHtml = '<div class="info-item">오늘 남은 배가 없습니다.</div>';
+      } else {
+        listHtml = timetable.map(item => {
+          const badge = getStatusBadge(code, item.depart_time);
+          const notes = item.notes ? `<div>${item.notes}</div>` : "";
+          const weekday = item.weekday_type ? ` (${item.weekday_type})` : "";
+          return `
+            <div class="info-item">
+              <strong>${item.depart_time}</strong> → ${item.arrive_time}${badge}<br>
+              ${item.arrive_place}${weekday}
+              ${notes}
+            </div>
+          `;
+        }).join("");
+      }
+
+      const content =
+        '<div style="padding:8px 10px;font-size:13px;min-width:220px;">' +
+        `<strong>${t.name}</strong><br>` +
+        `<span style="font-size:12px;color:#555;">오늘 남은 배 (${new Date().toLocaleTimeString("ko-KR", {hour:"2-digit", minute:"2-digit"})} 기준)</span>` +
+        `<div class="info-list">${listHtml}</div>` +
+        '</div>';
+
+      if (!infowindows[code]) {
+        infowindows[code] = new kakao.maps.InfoWindow({ content });
+      } else {
+        infowindows[code].setContent(content);
+      }
+
+      Object.values(infowindows).forEach(w => w.close());
+      infowindows[code].open(map, markers[code]);
+    }
+
+    function createMarker(code) {
+      const t = terminals[code];
+      if (!t) return;
+
+      const pos = new kakao.maps.LatLng(t.lat, t.lng);
+      const marker = new kakao.maps.Marker({ map, position: pos });
+
+      kakao.maps.event.addListener(marker, 'click', function () {
+        openInfoWindow(code);
+      });
+
+      markers[code] = marker;
+    }
+
+    Object.keys(terminals).forEach(createMarker);
+
+    // 셀렉트 박스 이벤트
+    document.getElementById('terminalSelect').addEventListener('change', function () {
+      const code = this.value;
+      if (!code || !terminals[code]) return;
+
+      const t = terminals[code];
+      const pos = new kakao.maps.LatLng(t.lat, t.lng);
+      map.panTo(pos);
+      openInfoWindow(code);
+    });
+
+    // 내 위치 버튼
+    document.getElementById('locBtn').addEventListener('click', function () {
+      if (!navigator.geolocation) {
+        alert('브라우저에서 현재 위치를 지원하지 않습니다.');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const loc = new kakao.maps.LatLng(lat, lng);
+        map.panTo(loc);
+
+        new kakao.maps.Marker({ map, position: loc });
+      }, function () {
+        alert('현재 위치를 가져올 수 없습니다.');
+      });
+    });
+  </script>
+</body>
+</html>

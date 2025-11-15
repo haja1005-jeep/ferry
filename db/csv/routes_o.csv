@@ -1,0 +1,3 @@
+﻿route_code,route_name_ko,route_name_en,origin_terminal_code,destination_name,via_islands,region,operator_name,route_type,distance_km,sailing_time_min,season_type,memo,use_yn
+RT-GARONG-SINI,가룡 ↔ 신의(송도·병풍),Garong – Sini,JN-SA-002,신의도,"송도,병풍도",신안권,슬로시티6호,도서민생활항로,40,60,동절기,Y,Y
+RT-AMTAE-BIGEUM,암태(남강) ↔ 비금(가산),Amtae – Bigeum,JN-SA-001,비금도,,신안권,비금/암태 연안,도서민생활항로,30,40,연중,Y,Y

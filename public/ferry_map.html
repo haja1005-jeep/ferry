@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>전남 여객선 지도 (모바일 바텀시트 프로토타입)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <style>
+    :root {
+      --sheet-bg: #ffffff;
+      --accent: #22c55e;
+      --text-muted: #6b7280;
+      --border-subtle: #e5e7eb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: #f3f4f6;
+      overscroll-behavior: none;
+    }
+
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 20;
+      background: #ffffffee;
+      backdrop-filter: blur(10px);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    header strong {
+      font-size: 15px;
+    }
+
+    header select, header button {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      font-size: 13px;
+      background: #fff;
+    }
+
+    header button {
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    #map {
+      position: absolute;
+      top: 44px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    /* bottom sheet */
+    .bottom-sheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      background: var(--sheet-bg);
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.08);
+      transform: translateY(70%); /* 기본: 아래로 내려간 상태(살짝만 보여줌) */
+      transition: transform 0.25s ease-out;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bottom-sheet.expanded {
+      transform: translateY(0);
+    }
+
+    .sheet-handle {
+      width: 100%;
+      padding-top: 6px;
+      padding-bottom: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .sheet-handle-bar {
+      width: 40px;
+      height: 4px;
+      border-radius: 999px;
+      background: #d1d5db;
+    }
+
+    .sheet-header {
+      padding: 4px 16px 8px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .sheet-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .sheet-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .sheet-content {
+      padding: 8px 16px 10px 16px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      color: #4b5563;
+      background: #f9fafb;
+    }
+
+    .timetable-item {
+      padding: 6px 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 13px;
+    }
+
+    .timetable-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .time-main {
+      font-weight: 600;
+    }
+
+    .time-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid #d4d4d8;
+      color: #4b5563;
+      background: #f9fafb;
+      white-space: nowrap;
+    }
+
+    .badge-status-출항 {
+      border-color: #22c55e;
+      color: #16a34a;
+      background: #ecfdf3;
+    }
+
+    .badge-status-결항 {
+      border-color: #ef4444;
+      color: #b91c1c;
+      background: #fef2f2;
+    }
+
+    .badge-status-지연 {
+      border-color: #f97316;
+      color: #c2410c;
+      background: #fff7ed;
+    }
+
+    .badge-status-대기 {
+      border-color: #3b82f6;
+      color: #1d4ed8;
+      background: #eff6ff;
+    }
+
+    .notes {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .empty {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 8px 0;
+    }
+
+    @media (min-width: 768px) {
+      .bottom-sheet {
+        left: 50%;
+        transform: translate(50%, 60%);
+        max-width: 420px;
+        border-radius: 16px;
+      }
+      .bottom-sheet.expanded {
+        transform: translate(50%, 0);
+      }
+    }
+  </style>
+
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=257fdd3647dd6abdb05eae8681106514"></script>
+</head>
+<body>
+<header>
+  <strong>전남 여객선</strong>
+  <select id="terminalSelect">
+    <option value="">터미널 선택</option>
+    <!-- JS에서 동적 채움 -->
+  </select>
+  <button id="locBtn">내 위치</button>
+</header>
+
+<div id="map"></div>
+
+<!-- Bottom Sheet -->
+<div id="bottomSheet" class="bottom-sheet">
+  <div class="sheet-handle" id="sheetToggle">
+    <div class="sheet-handle-bar"></div>
+  </div>
+  <div class="sheet-header">
+    <div class="sheet-title" id="sheetTitle">터미널을 선택하세요</div>
+    <div class="sheet-subtitle" id="sheetSubtitle">지도에서 핀을 누르거나 상단 셀렉트 박스를 선택하세요.</div>
+  </div>
+  <div class="sheet-content">
+    <div class="chip-row" id="chipRow" style="display:none;"></div>
+    <div id="timetableList" class="timetable-list">
+      <div class="empty">표시할 운항 정보가 없습니다.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // === 설정 ===
+  const API_BASE = '/ferry/api/index.php'; // 필요시 실제 경로로 수정
+
+  // bottom sheet toggle
+  const bottomSheet = document.getElementById('bottomSheet');
+  const sheetToggle = document.getElementById('sheetToggle');
+  sheetToggle.addEventListener('click', () => {
+    bottomSheet.classList.toggle('expanded');
+  });
+
+  const terminalSelect = document.getElementById('terminalSelect');
+  const sheetTitle = document.getElementById('sheetTitle');
+  const sheetSubtitle = document.getElementById('sheetSubtitle');
+  const timetableListEl = document.getElementById('timetableList');
+  const chipRow = document.getElementById('chipRow');
+
+  // Kakao map init
+  const map = new kakao.maps.Map(document.getElementById('map'), {
+    center: new kakao.maps.LatLng(34.85, 126.1), // 신안 대략 위치
+    level: 9
+  });
+
+  const markers = {};
+  let currentTerminalCode = null;
+
+  function createMarker(terminal) {
+    if (!terminal.lat || !terminal.lng) return; // 좌표 없는 건 스킵
+    const pos = new kakao.maps.LatLng(terminal.lat, terminal.lng);
+    const marker = new kakao.maps.Marker({ map, position: pos });
+
+    kakao.maps.event.addListener(marker, 'click', function () {
+      focusTerminal(terminal.terminal_code, terminal);
+    });
+
+    markers[terminal.terminal_code] = marker;
+  }
+
+  function populateTerminalSelect(terminals) {
+    terminals.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t.terminal_code;
+      opt.textContent = `${t.name_ko} (${t.city})`;
+      terminalSelect.appendChild(opt);
+    });
+  }
+
+  terminalSelect.addEventListener('change', function () {
+    const code = this.value;
+    if (!code) return;
+    const t = terminalsCache.find(x => x.terminal_code === code);
+    if (t) {
+      focusTerminal(code, t, true);
+    }
+  });
+
+  // 내 위치 버튼
+  document.getElementById('locBtn').addEventListener('click', function () {
+    if (!navigator.geolocation) {
+      alert('브라우저에서 현재 위치를 지원하지 않습니다.');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      const loc = new kakao.maps.LatLng(lat, lng);
+      map.panTo(loc);
+      new kakao.maps.Marker({ map, position: loc });
+    }, function () {
+      alert('현재 위치를 가져올 수 없습니다.');
+    });
+  });
+
+  let terminalsCache = [];
+
+  // 전남(또는 신안권) 터미널 목록 불러오기
+  async function loadTerminals() {
+    const url = `${API_BASE}?resource=terminals&region=신안권`; // region 필요 없으면 제거
+    const res = await fetch(url);
+    const data = await res.json();
+    terminalsCache = data;
+
+    populateTerminalSelect(data);
+    data.forEach(createMarker);
+  }
+
+  // HH:MM → 분
+  function timeToMinutes(hhmm) {
+    const [h, m] = hhmm.split(':').map(Number);
+    return h * 60 + m;
+  }
+
+  function getNowMinutes() {
+    const now = new Date();
+    return now.getHours() * 60 + now.getMinutes();
+  }
+
+  function getStatusBadgeElement(status) {
+    if (!status) return '';
+    const cls = 'badge badge-status-' + status.replace(/\s+/g, '');
+    return `<span class="${cls}">${status}</span>`;
+  }
+
+  // 특정 터미널 포커스 + 바텀시트 업데이트
+  async function focusTerminal(code, terminal, fromSelect = false) {
+    currentTerminalCode = code;
+
+    // 지도 이동
+    if (terminal.lat && terminal.lng) {
+      const pos = new kakao.maps.LatLng(terminal.lat, terminal.lng);
+      map.panTo(pos);
+    }
+
+    // 상단 셀렉트 동기화
+    if (!fromSelect) {
+      terminalSelect.value = code;
+    }
+
+    // bottom sheet 제목
+    sheetTitle.textContent = terminal.name_ko;
+    const nowStr = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    sheetSubtitle.textContent = `${nowStr} 기준 오늘 운항 정보`;
+
+    bottomSheet.classList.add('expanded');
+
+    // timetables + realtime 동시 호출
+    const dateStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const [ttRes, rtRes] = await Promise.all([
+      fetch(`${API_BASE}?resource=timetables&terminal=${encodeURIComponent(code)}&date=${dateStr}`),
+      fetch(`${API_BASE}?resource=realtime&terminal=${encodeURIComponent(code)}`)
+    ]);
+
+    const ttData = await ttRes.json();
+    const rtData = await rtRes.json();
+
+    const timetables = (ttData.timetables || []);
+    const realtimeItems = (rtData.items || []);
+
+    renderChips(terminal, timetables);
+    renderTimetableList(timetables, realtimeItems);
+  }
+
+  function renderChips(terminal, timetables) {
+    chipRow.innerHTML = '';
+    const chips = [];
+
+    if (terminal.city) {
+      chips.push({ label: terminal.city, type: 'city' });
+    }
+    if (terminal.eup_myeon) {
+      chips.push({ label: terminal.eup_myeon, type: 'emd' });
+    }
+    if (timetables.length > 0) {
+      const routeNames = [...new Set(timetables.map(t => t.route_name_ko))];
+      routeNames.forEach(rn => chips.push({ label: rn, type: 'route' }));
+    }
+
+    if (chips.length === 0) {
+      chipRow.style.display = 'none';
+      return;
+    }
+
+    chips.forEach(c => {
+      const span = document.createElement('span');
+      span.className = 'chip';
+      span.textContent = c.label;
+      chipRow.appendChild(span);
+    });
+
+    chipRow.style.display = 'flex';
+  }
+
+  function renderTimetableList(timetables, realtimeItems) {
+    const nowMin = getNowMinutes();
+
+    const list = timetables
+      .map(item => {
+        const departMin = timeToMinutes(item.depart_time);
+        return { ...item, departMin };
+      })
+      .filter(item => item.departMin >= nowMin - 5) // 출발 후 5분 지난 건 숨김
+      .sort((a, b) => a.departMin - b.departMin)
+      .slice(0, 10);
+
+    if (list.length === 0) {
+      timetableListEl.innerHTML = '<div class="empty">오늘 남은 배가 없습니다.</div>';
+      return;
+    }
+
+    const html = list.map(item => {
+      const rt = realtimeItems.find(r => r.departure_time === item.depart_time);
+      const status = rt ? rt.status : null;
+      const badge = getStatusBadgeElement(status);
+      const weekday = item.weekday_type && item.weekday_type !== '매일'
+        ? ` (${item.weekday_type})`
+        : '';
+
+      const notes = item.notes
+        ? `<div class="notes">${item.notes}</div>`
+        : '';
+
+      return `
+        <div class="timetable-item">
+          <div class="timetable-top">
+            <div>
+              <div class="time-main">${item.depart_time} → ${item.arrive_time}</div>
+              <div class="time-sub">${item.arrive_place || ''}${weekday}</div>
+            </div>
+            ${badge}
+          </div>
+          ${notes}
+        </div>
+      `;
+    }).join('');
+
+    timetableListEl.innerHTML = html;
+  }
+
+  // 초기 로딩
+  loadTerminals().catch(err => {
+    console.error(err);
+    alert('터미널 목록을 불러오지 못했습니다.');
+  });
+</script>
+</body>
+</html>

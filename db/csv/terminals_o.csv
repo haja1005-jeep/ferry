@@ -1,0 +1,4 @@
+﻿terminal_code,name_ko,name_en,city,eup_myeon,ri,terminal_type,road_addr,jibun_addr,lat,lng,phone,has_parking,parking_note,use_yn,source_url,memo,created_at,updated_at
+JN-SA-001,암태 남강선착장,Amtae Namgang Pier,신안군,암태면,와촌리,소형선착장,,,34.80304097,126.1193304,,N,,Y,,,0000-00-00,0000-00-00
+JN-SA-002,가룡선착장,Garong Pier,신안군,압해읍,가룡리,소형선착장,,,34.91839241,126.3047455,,N,,Y,,,0000-00-00,0000-00-00
+JN-SA-004,비금 가산터미널,Bigeum Gasan Terminal,신안군,비금면,가산리,소형선착장,,,34.76150889,125.9984915,,N,,Y,,,0000-00-00,0000-00-00

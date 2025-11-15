@@ -1,0 +1,7 @@
+﻿id,route_code,trip_no,season,weekday_type,depart_time,arrive_time,depart_terminal_code,arrive_place,notes,use_yn
+1,RT-GARONG-SINI,1,동절기,매일,7:20,9:00,JN-SA-002,신의도,사진 기반,Y
+2,RT-GARONG-SINI,2,동절기,매일,10:40,12:21,JN-SA-002,신의도,사진 기반,Y
+3,RT-GARONG-SINI,3,동절기,매일,14:00,15:40,JN-SA-002,신의도,사진 기반,Y
+4,RT-GARONG-SINI,4,동절기,매일,16:00,17:41,JN-SA-002,신의도,사진 기반,Y
+5,RT-AMTAE-BIGEUM,1,연중,매일,6:40,7:20,JN-SA-001,비금,사진 기반,Y
+6,RT-AMTAE-BIGEUM,2,연중,매일,8:00,8:40,JN-SA-001,비금,사진 기반,Y
