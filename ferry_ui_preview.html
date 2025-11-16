@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>전남 여객선 UI 미리보기</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+  <style>
+    :root {
+      --primary: #1d9bf0;
+      --primary-soft: rgba(29,155,240,0.08);
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border-subtle: #e5e7eb;
+      --bg-soft: #f3f4f6;
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",system-ui,sans-serif;
+      background:var(--bg-soft);
+      color:var(--text-main);
+    }
+    .page{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+    /* 상단바 */
+    .topbar{
+      padding:12px 16px 10px;
+      background:#fff;
+      box-shadow:0 2px 6px rgba(0,0,0,0.06);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+    .top-title{
+      font-size:18px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:8px;
+    }
+    .top-title span.logo{
+      width:26px;height:26px;border-radius:999px;
+      background:var(--primary-soft);
+      display:flex;align-items:center;justify-content:center;
+      font-size:16px;
+      color:var(--primary);
+    }
+    .chip-row{
+      display:flex;
+      gap:6px;
+      overflow-x:auto;
+      padding-bottom:4px;
+      -webkit-overflow-scrolling:touch;
+    }
+    .chip{
+      flex:0 0 auto;
+      padding:6px 12px;
+      border-radius:999px;
+      font-size:13px;
+      border:1px solid #e5e7eb;
+      background:#f9fafb;
+      color:#4b5563;
+      font-weight:600;
+      white-space:nowrap;
+    }
+    .chip.active{
+      background:var(--primary);
+      color:#fff;
+      border-color:var(--primary);
+      box-shadow:0 2px 6px rgba(37,99,235,0.35);
+    }
+
+    /* 메인 레이아웃 */
+    .main{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      position:relative;
+    }
+    .map-placeholder{
+      flex:1;
+      background:linear-gradient(135deg,#c7e5ff,#e5f2ff);
+      position:relative;
+      overflow:hidden;
+    }
+    .map-grid{
+      position:absolute;
+      inset:0;
+      background-image:linear-gradient(to right,rgba(255,255,255,0.35) 1px,transparent 1px),
+                       linear-gradient(to bottom,rgba(255,255,255,0.35) 1px,transparent 1px);
+      background-size:40px 40px;
+      opacity:0.5;
+    }
+    .map-label{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      font-size:15px;
+      font-weight:700;
+      color:#0f172a;
+      text-shadow:0 1px 3px rgba(255,255,255,0.6);
+    }
+
+    /* 카드형 검색 영역 (지도 위에) */
+    .search-card{
+      position:absolute;
+      left:50%;
+      top:16px;
+      transform:translateX(-50%);
+      width:92%;
+      max-width:420px;
+      background:#ffffffee;
+      backdrop-filter:blur(18px);
+      border-radius:18px;
+      box-shadow:0 12px 30px rgba(15,23,42,0.18);
+      padding:12px 14px 10px;
+    }
+    .search-title{
+      font-size:14px;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+    .field{
+      margin-bottom:8px;
+    }
+    .field-label{
+      font-size:12px;
+      font-weight:600;
+      color:var(--text-muted);
+      margin-bottom:3px;
+    }
+    .field-select{
+      position:relative;
+      border-radius:12px;
+      background:#f9fafb;
+      border:1px solid var(--border-subtle);
+      padding:10px 36px 10px 12px;
+      font-size:14px;
+      font-weight:600;
+      color:#111827;
+    }
+    .field-select::after{
+      content:"⌄";
+      position:absolute;
+      right:12px;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:12px;
+      color:#6b7280;
+    }
+    .field-input{
+      width:100%;
+      border-radius:12px;
+      border:1px solid var(--border-subtle);
+      padding:9px 11px;
+      font-size:14px;
+      background:#fff;
+    }
+    .search-btn{
+      width:100%;
+      margin-top:4px;
+      border-radius:14px;
+      border:none;
+      padding:10px 0;
+      font-size:15px;
+      font-weight:700;
+      background:#111827;
+      color:#fff;
+    }
+
+    /* 플로팅 버튼들 */
+    .fab-wrap{
+      position:absolute;
+      right:14px;
+      bottom:150px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .fab{
+      width:44px;height:44px;
+      border-radius:999px;
+      border:none;
+      background:#ffffff;
+      box-shadow:0 6px 16px rgba(15,23,42,0.35);
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;
+      cursor:pointer;
+    }
+
+    /* 바텀시트 */
+    .sheet{
+      position:relative;
+      margin-top:-26px;
+      background:#fff;
+      border-radius:22px 22px 0 0;
+      box-shadow:0 -8px 24px rgba(15,23,42,0.18);
+      padding:8px 16px 18px;
+    }
+    .sheet-handle{
+      width:46px;height:5px;
+      border-radius:999px;
+      background:#e5e7eb;
+      margin:0 auto 8px;
+    }
+    .sheet-title{
+      font-size:16px;
+      font-weight:800;
+      margin-bottom:2px;
+    }
+    .sheet-sub{
+      font-size:12px;
+      color:var(--text-muted);
+      margin-bottom:8px;
+    }
+    .tab-bar{
+      display:flex;
+      gap:6px;
+      padding:4px;
+      border-radius:999px;
+      background:#f3f4f6;
+      margin-bottom:10px;
+    }
+    .tab-btn{
+      flex:1;
+      border:none;
+      border-radius:999px;
+      padding:7px 0;
+      font-size:13px;
+      font-weight:700;
+      background:transparent;
+      color:#6b7280;
+    }
+    .tab-btn.active{
+      background:#111827;
+      color:#fff;
+      box-shadow:0 2px 8px rgba(15,23,42,0.4);
+    }
+    .timetable-card{
+      background:#fff;
+      border-radius:16px;
+      padding:10px 12px;
+      box-shadow:0 4px 12px rgba(15,23,42,0.08);
+      margin-bottom:8px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:13px;
+    }
+    .timetable-main{
+      font-weight:700;
+      font-size:14px;
+    }
+    .timetable-sub{
+      font-size:12px;
+      color:var(--text-muted);
+    }
+    .badge{
+      border-radius:999px;
+      padding:3px 8px;
+      font-size:11px;
+      border:1px solid #22c55e;
+      color:#16a34a;
+      background:#ecfdf3;
+      font-weight:600;
+    }
+
+    @media (max-width:480px){
+      .top-title{font-size:17px;}
+      .search-card{top:12px;}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <!-- 상단바 -->
+  <div class="topbar">
+    <div class="top-title">
+      <span class="logo">🚢</span>
+      전남 여객선
+    </div>
+    <div class="chip-row">
+      <button class="chip active">전체</button>
+      <button class="chip">신안군</button>
+      <button class="chip">목포시</button>
+      <button class="chip">여수시</button>
+      <button class="chip">완도군</button>
+    </div>
+  </div>
+
+  <!-- 메인 영역 -->
+  <div class="main">
+    <div class="map-placeholder">
+      <div class="map-grid"></div>
+      <div class="map-label">여기에 실제 카카오맵이 들어갑니다</div>
+
+      <!-- 카드형 검색 -->
+      <div class="search-card">
+        <div class="search-title">항로 검색</div>
+        <div class="field">
+          <div class="field-label">출발 터미널</div>
+          <div class="field-select">압해도(압해 터미널)</div>
+        </div>
+        <div class="field">
+          <div class="field-label">도착지 (도서명/행선지)</div>
+          <input class="field-input" placeholder="예: 비금, 신의도, 암태" />
+        </div>
+        <div class="field">
+          <div class="field-label">날짜</div>
+          <div class="field-select">2025. 03. 12 (수)</div>
+        </div>
+        <button class="search-btn">검색하기</button>
+      </div>
+
+      <!-- 플로팅 버튼 -->
+      <div class="fab-wrap">
+        <button class="fab">📍</button>
+        <button class="fab">🔍</button>
+      </div>
+    </div>
+
+    <!-- 바텀시트 -->
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">터미널을 선택하세요</div>
+      <div class="sheet-sub">지도에서 핀을 누르거나 위 검색창에서 선택하세요.</div>
+      <div class="tab-bar">
+        <button class="tab-btn active">시간표</button>
+        <button class="tab-btn">승객요금</button>
+        <button class="tab-btn">차량운임</button>
+      </div>
+
+      <div class="timetable-card">
+        <div>
+          <div class="timetable-main">07:20 → 09:00</div>
+          <div class="timetable-sub">가룡 ↔ 신월 · 1항차</div>
+        </div>
+        <span class="badge">정상 운항</span>
+      </div>
+      <div class="timetable-card">
+        <div>
+          <div class="timetable-main">10:40 → 12:21</div>
+          <div class="timetable-sub">가룡 ↔ 기섬 · 2항차</div>
+        </div>
+        <span class="badge">출항 예정</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+

@@ -29,29 +29,29 @@
       z-index: 20;
       background: #ffffffee;
       backdrop-filter: blur(12px);
-      padding: 8px 10px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     }
 
     header strong {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 700;
       white-space: nowrap;
     }
 
     header select,
     header button {
-      padding: 8px 10px;
-      border-radius: 12px;
-      font-size: 13px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-size: 15px;
       font-weight: 600;
       border: none;
       background: #f7f7f7;
       box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-      min-height: 34px;
+      min-height: 42px;
       cursor: pointer;
       white-space: nowrap;
     }
@@ -65,87 +65,10 @@
 
     #map {
       position: absolute;
-      top: 48px; /* header height */
+      top: 52px; /* header height */
       left: 0;
       right: 0;
       bottom: 0;
-    }
-
-    /* ===== Sidebar (검색 패널) ===== */
-    .sidebar {
-      position: fixed;
-      top: 48px;
-      left: 0;
-      bottom: 0;
-      width: 260px;
-      max-width: 80%;
-      background: #ffffff;
-      box-shadow: 2px 0 12px rgba(0,0,0,0.1);
-      z-index: 25;
-      transform: translateX(-100%);
-      transition: transform 0.2s ease-out;
-      display: flex;
-      flex-direction: column;
-      padding: 10px 12px;
-      font-size: 13px;
-    }
-
-    .sidebar.open {
-      transform: translateX(0);
-    }
-
-    .sidebar h2 {
-      font-size: 15px;
-      margin: 0 0 8px;
-    }
-
-    .sidebar label {
-      display: block;
-      margin-top: 6px;
-      margin-bottom: 2px;
-      font-weight: 600;
-    }
-
-    .sidebar select,
-    .sidebar input {
-      width: 100%;
-      padding: 7px 8px;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      font-size: 13px;
-    }
-
-    .sidebar button {
-      width: 100%;
-      margin-top: 8px;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: none;
-      background: #111827;
-      color: #ffffff;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .sidebar-result {
-      margin-top: 10px;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .sidebar-result-item {
-      padding: 6px 4px;
-      border-bottom: 1px solid #f3f4f6;
-    }
-
-    .sidebar-result-item strong {
-      display: block;
-      font-size: 13px;
-    }
-
-    .sidebar-result-item span {
-      font-size: 12px;
-      color: #6b7280;
     }
 
     /* ===== Bottom Sheet ===== */
@@ -192,12 +115,12 @@
     }
 
     .sheet-title {
-      font-size: 17px;
+      font-size: 19px;
       font-weight: 700;
     }
 
     .sheet-subtitle {
-      font-size: 13px;
+      font-size: 15px;
       color: #737373;
       margin-top: 4px;
     }
@@ -239,24 +162,24 @@
     }
 
     .section-title {
-      font-size: 15px;
+      font-size: 17px;
       font-weight: 700;
     }
 
     .section-sub {
-      font-size: 12px;
+      font-size: 13px;
       color: #9ca3af;
     }
 
     .empty {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-muted);
       padding: 8px 0;
     }
 
     /* ===== 터미널 기본 정보 ===== */
     #terminalInfo {
-      font-size: 13px;
+      font-size: 14px;
       color: #4b5563;
     }
 
@@ -264,10 +187,10 @@
     .timetable-item {
       background: #ffffff;
       border-radius: 16px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
       box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .timetable-top {
@@ -278,12 +201,12 @@
     }
 
     .time-main {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
     }
 
     .time-sub {
-      font-size: 12px;
+      font-size: 13px;
       color: #6b7280;
     }
 
@@ -344,7 +267,7 @@
       border: none;
       border-radius: 999px;
       padding: 6px 0;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       background: transparent;
       color: #6b7280;
@@ -377,7 +300,7 @@
       border-radius: 14px;
       padding: 8px 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.04);
-      font-size: 13px;
+      font-size: 14px;
     }
 
     .fare-main {
@@ -399,7 +322,7 @@
       white-space: nowrap;
     }
 
-    /* ===== 주변 장소 카드 ===== */
+    /* ===== 주변 장소 카드 (인스타 스타일) ===== */
     .place-row {
       display: flex;
       gap: 10px;
@@ -409,16 +332,16 @@
     }
 
     .place-card {
-      flex: 0 0 150px;
+      flex: 0 0 160px;
       background: #ffffff;
-      border-radius: 16px;
-      padding: 8px;
+      border-radius: 18px;
+      padding: 10px;
       border: none;
       box-shadow: 0 4px 10px rgba(0,0,0,0.06);
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
@@ -429,8 +352,8 @@
 
     .place-thumb {
       width: 100%;
-      height: 80px;
-      border-radius: 14px;
+      height: 96px;
+      border-radius: 16px;
       background: linear-gradient(135deg, #e2e2e2, #efefef);
       position: relative;
       overflow: hidden;
@@ -439,8 +362,8 @@
     .place-thumb::after {
       content: "PHOTO";
       position: absolute;
-      bottom: 4px;
-      right: 6px;
+      bottom: 6px;
+      right: 8px;
       font-size: 10px;
       color: rgba(255,255,255,0.9);
       padding: 2px 6px;
@@ -449,7 +372,7 @@
     }
 
     .place-name {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 700;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -457,7 +380,7 @@
     }
 
     .place-meta {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-muted);
       overflow: hidden;
       text-overflow: ellipsis;
@@ -465,7 +388,7 @@
     }
 
     .place-tag {
-      font-size: 10px;
+      font-size: 11px;
       display: inline-block;
       padding: 2px 6px;
       border-radius: 999px;
@@ -487,85 +410,45 @@
       }
     }
 
-    /* 모바일 폰트 강화 */
+    /* 모바일 폰트 강화 — 480px 이하 해상도에 적용 */
     @media (max-width: 480px) {
-      header strong { font-size: 17px; }
+      body { font-size: 19px; }
+      header strong { font-size: 22px; }
       header select,
       header button {
-        font-size: 14px;
-        padding: 9px 10px;
+        font-size: 19px;
+        padding: 14px 20px;
       }
-      .sheet-title { font-size: 17px; }
-      .sheet-subtitle { font-size: 13px; }
+      .sheet-title { font-size: 24px; }
+      .sheet-subtitle { font-size: 19px; }
+      .chip { font-size: 17px; padding: 8px 14px; }
+      .section-title { font-size: 19px; }
+      .section-sub { font-size: 17px; }
+      #terminalInfo { font-size: 18px; }
+      .timetable-item { font-size: 19px; padding: 16px; }
+      .time-main { font-size: 19px; }
+      .time-sub { font-size: 15px; }
+      .notes { font-size: 14px; }
+      .place-name { font-size: 16px; }
+      .place-meta { font-size: 14px; }
+      .place-tag { font-size: 13px; }
+      .empty { font-size: 16px; }
     }
-
-
-	/* 떠 있는 햄버거 버튼 (사이드바 토글) */
-.hamburger-btn {
-  position: fixed;
-  left: 10px;
-  top: 7px;          /* 헤더 아래쪽에 살짝 걸치게 */
-  z-index: 26;
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
-  border: none;
-  background: #ffffffee;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.18);
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-}
-
-.hamburger-btn:active {
-  transform: scale(0.96);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
   </style>
 
+  <!-- Kakao 지도 + Places 라이브러리 -->
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=257fdd3647dd6abdb05eae8681106514&libraries=services"></script>
 </head>
 <body>
 <header>
-  <button id="hamburgerBtn" class="hamburger-btn">☰</button>
   <strong>전남 여객선</strong>
-  <select id="regionSelect">
-    <option value="">전체</option>
-  </select>
   <select id="terminalSelect">
-    <option value="">터미널</option>
+    <option value="">터미널 선택</option>
   </select>
   <button id="locBtn">내 위치</button>
-  <button id="searchToggleBtn">검색</button>
 </header>
 
-
 <div id="map"></div>
-
-<!-- 검색 사이드바 -->
-<div id="sidebar" class="sidebar">
-  <h2>항로 검색</h2>
-  <label for="searchFrom">출발 터미널</label>
-  <select id="searchFrom">
-    <option value="">선택</option>
-  </select>
-
-  <label for="searchTo">도착지 (도서명/행선지)</label>
-  <input type="text" id="searchTo" placeholder="예: 비금, 신의도">
-
-  <label for="searchDate">날짜</label>
-  <input type="date" id="searchDate">
-
-  <button id="searchBtn">검색하기</button>
-
-  <div class="sidebar-result" id="searchResult"></div>
-</div>
 
 <!-- Bottom Sheet -->
 <div id="bottomSheet" class="bottom-sheet">
@@ -574,12 +457,14 @@
   </div>
   <div class="sheet-header">
     <div class="sheet-title" id="sheetTitle">터미널을 선택하세요</div>
-    <div class="sheet-subtitle" id="sheetSubtitle">지도에서 핀을 누르거나 상단에서 선택하세요.</div>
+    <div class="sheet-subtitle" id="sheetSubtitle">지도에서 핀을 누르거나 상단 셀렉트 박스를 선택하세요.</div>
   </div>
   <div class="sheet-content">
+    <!-- 터미널 태그 / 기본 정보 -->
     <div class="chip-row" id="chipRow" style="display:none;"></div>
     <div class="section" id="terminalInfo" style="display:none;"></div>
 
+    <!-- 운임/시간표 탭 -->
     <div class="tab-bar">
       <button class="tab-btn active" data-tab="timetable">시간표</button>
       <button class="tab-btn" data-tab="passenger">승객요금</button>
@@ -649,33 +534,28 @@
 </div>
 
 <script>
-  const API_BASE = '/ferry/api/index.php';
+  // ===== 설정 =====
+  const API_BASE = '/ferry/api/index.php'; // 필요 시 실제 경로로 수정
 
   const bottomSheet = document.getElementById('bottomSheet');
   const sheetToggle = document.getElementById('sheetToggle');
   const terminalSelect = document.getElementById('terminalSelect');
-  const regionSelect = document.getElementById('regionSelect');
   const sheetTitle = document.getElementById('sheetTitle');
   const sheetSubtitle = document.getElementById('sheetSubtitle');
+
   const timetableListEl = document.getElementById('timetableList');
   const chipRow = document.getElementById('chipRow');
   const terminalInfoEl = document.getElementById('terminalInfo');
   const timetableSummaryEl = document.getElementById('timetableSummary');
+
   const passengerFareListEl = document.getElementById('passengerFareList');
   const passengerSummaryEl = document.getElementById('passengerSummary');
   const vehicleFareListEl = document.getElementById('vehicleFareList');
   const vehicleSummaryEl = document.getElementById('vehicleSummary');
+
   const tourListEl = document.getElementById('tourList');
   const foodListEl = document.getElementById('foodList');
   const stayListEl = document.getElementById('stayList');
-
-  const sidebar = document.getElementById('sidebar');
-  const searchToggleBtn = document.getElementById('searchToggleBtn');
-  const searchFrom = document.getElementById('searchFrom');
-  const searchTo = document.getElementById('searchTo');
-  const searchDate = document.getElementById('searchDate');
-  const searchBtn = document.getElementById('searchBtn');
-  const searchResult = document.getElementById('searchResult');
 
   const tabButtons = document.querySelectorAll('.tab-btn');
   const tabContents = {
@@ -698,30 +578,25 @@
     btn.addEventListener('click', () => setActiveTab(btn.dataset.tab));
   });
 
+  // Bottom sheet toggle
   sheetToggle.addEventListener('click', () => {
     bottomSheet.classList.toggle('expanded');
   });
 
   // Kakao map
   const map = new kakao.maps.Map(document.getElementById('map'), {
-    center: new kakao.maps.LatLng(34.85, 126.1),
+    center: new kakao.maps.LatLng(34.85, 126.1), // 전남 대략
     level: 9
   });
 
-  // 마커 이미지: 기본(회색) + 선택(빨간 별)
-  const normalMarkerImage = null; // 카카오 기본 마커
-  const selectedMarkerImage = new kakao.maps.MarkerImage(
-    'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
-    new kakao.maps.Size(24, 35)
-  );
-
-  const markers = {};     // terminal_code -> marker
-  let selectedMarker = null;
+  const markers = {};
   let terminalsCache = [];
   let currentTerminalCode = null;
 
+  // Kakao Places 서비스
   const placesService = new kakao.maps.services.Places();
 
+  // 내 위치
   document.getElementById('locBtn').addEventListener('click', function () {
     if (!navigator.geolocation) {
       alert('브라우저에서 현재 위치를 지원하지 않습니다.');
@@ -738,88 +613,28 @@
     });
   });
 
-  // ===== 터미널 목록 =====
+  // 터미널 목록 불러오기
   async function loadTerminals() {
     const url = `${API_BASE}?resource=terminals`;
     const res = await fetch(url);
     const data = await res.json();
     terminalsCache = data;
 
-    populateRegionSelect(data);
     populateTerminalSelect(data);
-    populateSearchFrom(data);
     data.forEach(createMarker);
   }
 
-  function populateRegionSelect(terminals) {
-    const set = new Set();
-    terminals.forEach(t => {
-      if (t.city) set.add(t.city);
-    });
-    [...set].sort().forEach(city => {
-      const opt = document.createElement('option');
-      opt.value = city;
-      opt.textContent = city;
-      regionSelect.appendChild(opt);
-    });
-  }
-
-  function populateTerminalSelect(terminals, regionFilter = '') {
-    terminalSelect.innerHTML = '<option value="">터미널</option>';
-    terminals
-      .filter(t => !regionFilter || t.city === regionFilter)
-      .forEach(t => {
-        const opt = document.createElement('option');
-        const labelCity = t.city || '';
-        opt.value = t.terminal_code;
-        opt.textContent = labelCity
-          ? `${t.name_ko} (${labelCity})`
-          : t.name_ko;
-        terminalSelect.appendChild(opt);
-      });
-  }
-
-  function populateSearchFrom(terminals) {
-    searchFrom.innerHTML = '<option value="">선택</option>';
+  function populateTerminalSelect(terminals) {
     terminals.forEach(t => {
       const opt = document.createElement('option');
+      const labelCity = t.city || '';
       opt.value = t.terminal_code;
-      opt.textContent = t.name_ko;
-      searchFrom.appendChild(opt);
+      opt.textContent = labelCity
+        ? `${t.name_ko} (${labelCity})`
+        : t.name_ko;
+      terminalSelect.appendChild(opt);
     });
   }
-
-  regionSelect.addEventListener('change', function () {
-    const region = this.value;
-    populateTerminalSelect(terminalsCache, region);
-
-    // 마커 show/hide
-    terminalsCache.forEach(t => {
-      const m = markers[t.terminal_code];
-      if (!m) return;
-      if (!region || t.city === region) {
-        m.setMap(map);
-      } else {
-        m.setMap(null);
-      }
-    });
-
-    // 현재 선택된 터미널이 필터 밖이면 선택 해제
-    const current = terminalsCache.find(t => t.terminal_code === currentTerminalCode);
-    if (current && region && current.city !== region) {
-      if (selectedMarker) selectedMarker.setImage(normalMarkerImage);
-      selectedMarker = null;
-      currentTerminalCode = null;
-      terminalSelect.value = '';
-      sheetTitle.textContent = '터미널을 선택하세요';
-      sheetSubtitle.textContent = '지도에서 핀을 누르거나 상단에서 선택하세요.';
-      timetableListEl.innerHTML = '<div class="empty">표시할 운항 정보가 없습니다.</div>';
-      passengerFareListEl.innerHTML = '<div class="empty">승객 요금 정보가 없습니다.</div>';
-      vehicleFareListEl.innerHTML = '<div class="empty">차량 운임 정보가 없습니다.</div>';
-      chipRow.style.display = 'none';
-      terminalInfoEl.style.display = 'none';
-    }
-  });
 
   terminalSelect.addEventListener('change', function () {
     const code = this.value;
@@ -869,9 +684,14 @@
 
     let html = '';
     if (locText) {
-      html += `<div style="margin-bottom:4px;">${locText}</div>`;
+      html += `<div style="font-size:14px; color:#4b5563; margin-bottom:4px;">${locText}</div>`;
     }
-    html += `<div style="font-size:12px; color:#6b7280;">터미널 코드: ${terminal.terminal_code || '-'}</div>`;
+
+    html += `
+      <div style="font-size:13px; color:#6b7280;">
+        터미널 코드: ${terminal.terminal_code || '-'}
+      </div>
+    `;
 
     terminalInfoEl.innerHTML = html;
     terminalInfoEl.style.display = 'block';
@@ -881,8 +701,12 @@
     chipRow.innerHTML = '';
     const chips = [];
 
-    if (terminal.city) chips.push({ label: terminal.city });
-    if (terminal.eup_myeon) chips.push({ label: terminal.eup_myeon });
+    if (terminal.city) {
+      chips.push({ label: terminal.city });
+    }
+    if (terminal.eup_myeon) {
+      chips.push({ label: terminal.eup_myeon });
+    }
     if (timetables.length > 0) {
       const routeNames = [...new Set(timetables.map(t => t.route_name_ko).filter(Boolean))];
       routeNames.forEach(rn => chips.push({ label: rn }));
@@ -1053,6 +877,8 @@
     targetEl.innerHTML = '<div class="empty">주변 정보를 불러오는 중입니다...</div>';
 
     placesService.categorySearch(categoryCode, (data, status) => {
+      console.log('[Places]', categoryCode, 'status=', status, 'count=', data ? data.length : 0);
+
       if (status !== kakao.maps.services.Status.OK || !data || data.length === 0) {
         targetEl.innerHTML = '<div class="empty">주변에 표시할 장소가 없습니다.</div>';
         return;
@@ -1095,24 +921,16 @@
     }, options);
   }
 
-  // ===== 터미널 포커스 & 마커 색 변경 =====
+  // ===== 터미널 포커스 =====
   async function focusTerminal(code, terminal, fromSelect = false) {
     currentTerminalCode = code;
 
-    // 마커 색상 처리
-    if (selectedMarker) {
-      selectedMarker.setImage(normalMarkerImage);
-    }
-    const marker = markers[code];
-    if (marker) {
-      marker.setImage(selectedMarkerImage);
-      selectedMarker = marker;
-      const lat = Number(terminal.lat);
-      const lng = Number(terminal.lng);
-      if (lat && lng) {
-        const pos = new kakao.maps.LatLng(lat, lng);
-        map.panTo(pos);
-      }
+    const lat = Number(terminal.lat);
+    const lng = Number(terminal.lng);
+
+    if (lat && lng) {
+      const pos = new kakao.maps.LatLng(lat, lng);
+      map.panTo(pos);
     }
 
     if (!fromSelect) {
@@ -1121,12 +939,14 @@
 
     const now = new Date();
     const nowStr = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-    const dateStr = now.toISOString().slice(0, 10);
 
     sheetTitle.textContent = terminal.name_ko;
     sheetSubtitle.textContent = `${nowStr} 기준 정보`;
     bottomSheet.classList.add('expanded');
 
+    const dateStr = now.toISOString().slice(0, 10);
+
+    // 초기 상태 문구
     timetableListEl.innerHTML = '<div class="empty">시간표를 불러오는 중입니다...</div>';
     passengerFareListEl.innerHTML = '<div class="empty">승객 요금을 불러오는 중입니다...</div>';
     vehicleFareListEl.innerHTML = '<div class="empty">차량 운임을 불러오는 중입니다...</div>';
@@ -1156,6 +976,8 @@
             mainRouteName = timetables[0].route_name_ko || '';
           }
         }
+      } else {
+        console.error('timetables API 오류:', ttRes.status);
       }
 
       if (rtRes.ok) {
@@ -1163,8 +985,11 @@
         if (rtData && Array.isArray(rtData.items)) {
           realtimeItems = rtData.items;
         }
+      } else {
+        console.error('realtime API 오류:', rtRes.status);
       }
 
+      // 승객/차량 운임 가져오기 (대표 route 기준)
       if (mainRouteCode) {
         try {
           const pfRes = await fetch(`${API_BASE}?resource=passenger_fare&route=${encodeURIComponent(mainRouteCode)}`);
@@ -1173,7 +998,9 @@
             passengerFares = Array.isArray(pfData.items) ? pfData.items :
                              Array.isArray(pfData) ? pfData : [];
           }
-        } catch (e) { console.error(e); }
+        } catch (e) {
+          console.error('passenger_fare API 오류:', e);
+        }
 
         try {
           const vfRes = await fetch(`${API_BASE}?resource=vehicle_fare&route=${encodeURIComponent(mainRouteCode)}`);
@@ -1182,7 +1009,9 @@
             vehicleFares = Array.isArray(vfData.items) ? vfData.items :
                            Array.isArray(vfData) ? vfData : [];
           }
-        } catch (e) { console.error(e); }
+        } catch (e) {
+          console.error('vehicle_fare API 오류:', e);
+        }
       }
     } catch (e) {
       console.error('timetables/realtime 로딩 중 에러:', e);
@@ -1200,74 +1029,15 @@
       renderVehicleFareList([], '');
     }
 
-    const lat = Number(terminal.lat);
-    const lng = Number(terminal.lng);
     if (lat && lng) {
       searchNearbyPlaces(lat, lng);
     } else {
       clearNearbyPlaces();
     }
 
+    // 기본 탭은 시간표
     setActiveTab('timetable');
   }
-
-
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-
-  // ===== 사이드바: 출발/도착/날짜 검색 =====
-  searchToggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-  });
-
-  // 햄버거 버튼으로도 사이드바 열기/닫기
-   hamburgerBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-   });
-
-  searchBtn.addEventListener('click', async () => {
-    const fromCode = searchFrom.value;
-    const toKeyword = searchTo.value.trim();
-    const dateVal = searchDate.value || new Date().toISOString().slice(0, 10);
-
-    if (!fromCode) {
-      alert('출발 터미널을 선택해 주세요.');
-      return;
-    }
-
-    searchResult.innerHTML = '<div class="empty">검색 중...</div>';
-
-    try {
-      const res = await fetch(`${API_BASE}?resource=timetables&terminal=${encodeURIComponent(fromCode)}&date=${dateVal}`);
-      if (!res.ok) throw new Error(res.status);
-      const data = await res.json();
-      const list = Array.isArray(data.timetables) ? data.timetables : [];
-
-      let filtered = list;
-      if (toKeyword) {
-        const kw = toKeyword.replace(/\s+/g, '').toLowerCase();
-        filtered = list.filter(item =>
-          (item.arrive_place || '').replace(/\s+/g, '').toLowerCase().includes(kw)
-        );
-      }
-
-      if (filtered.length === 0) {
-        searchResult.innerHTML = '<div class="empty">조건에 맞는 운항편이 없습니다.</div>';
-        return;
-      }
-
-      const html = filtered.map(item => `
-        <div class="sidebar-result-item">
-          <strong>${item.depart_time} → ${item.arrive_time}</strong>
-          <span>${item.arrive_place || ''} · 편명 ${item.trip_no || '-'}</span>
-        </div>
-      `).join('');
-
-      searchResult.innerHTML = html;
-    } catch (e) {
-      console.error(e);
-      searchResult.innerHTML = '<div class="empty">검색 중 오류가 발생했습니다.</div>';
-    }
-  });
 
   // 초기 로딩
   loadTerminals().catch(err => {

@@ -1,11 +1,11 @@
 <?php
-// api/index.php
+
+// /ferry/api/index.php
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 
 require_once __DIR__ . '/config.php';
 
-// 공통 파라미터
 $resource = isset($_GET['resource']) ? $_GET['resource'] : '';
 $terminal = isset($_GET['terminal']) ? $_GET['terminal'] : null;
 $date     = isset($_GET['date']) ? $_GET['date'] : null;
@@ -28,7 +28,7 @@ switch ($resource) {
         break;
 
     case 'realtime':
-        require_once __DIR__ . '/realtime.php';
+        require __DIR__ . '/realtime.php';
         api_realtime($pdo, $terminal);
         break;
 
@@ -38,9 +38,9 @@ switch ($resource) {
         break;
 
     default:
-        echo json_encode(array(
+        echo json_encode([
             'error'   => 'invalid_resource',
-            'message' => 'use ?resource=terminals|routes|timetables|realtime|all'
-        ), JSON_UNESCAPED_UNICODE);
+            'message' => 'use ?resource=terminals|routes|timetables|all'
+        ], JSON_UNESCAPED_UNICODE);
 }
- ?>
+?>

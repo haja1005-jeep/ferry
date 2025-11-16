@@ -1,0 +1,7 @@
+﻿route_code,passenger_type,age_group,resident_type,discount_type,fare_oneway,fare_round,fuel_surcharge,port_fee,total_oneway,total_round,season_type,weekday_type,notes,use_yn
+RT-AMTAE-BIGEUM,성인,성인,일반,,8000,15000,1000,500,9500,18500,연중,매일,,Y
+RT-AMTAE-BIGEUM,소인,소인,일반,,4000,7500,500,300,4800,8300,연중,매일,,Y
+RT-AMTAE-BIGEUM,성인,성인,도서주민,도서민할인,5000,9000,0,0,5000,9000,연중,매일,도서주민 할인요금,Y
+RT-GARONG-SINI,성인,성인,일반,,9000,17000,1000,500,10500,19500,연중,매일,,Y
+RT-GARONG-SINI,소인,소인,일반,,4500,8500,500,300,5300,9300,연중,매일,,Y
+RT-GARONG-SINI,경로,성인,일반,경로우대,6000,11000,1000,500,7500,13500,연중,매일,만65세 이상,Y

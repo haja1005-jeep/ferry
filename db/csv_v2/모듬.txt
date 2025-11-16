@@ -1,0 +1,157 @@
+
+항로 routes.csv 
+route_code,route_name_ko,route_name_en,origin_terminal_code,destination_name,via_islands,region,operator_name,operator_phone,operator_url,route_type,distance_km,sailing_time_min,season_type,use_yn,memo
+RT-GARONG-SINI,가룡 ↔ 신의(송도·병풍),Garong – Sini (Songdo · Byeongpung),JN-SA-002,신의도,"송도, 병풍도",신안권,○○해운,"061-XXX-XXXX","http://example.com",도서민생활항로,,60,동·하절기구분,Y,"슬로시티6호 운항"
+RT-SONGGONG-BIGEUM,송공 ↔ 비금,Songgong – Bigeum,JN-SA-003,비금도,,신안권,○○해운,"061-XXX-XXXX","http://example.com",도서민생활항로,,40,동·하절기구분,Y,"비금 가산 여객선터미널 도착"
+RT-MOKPO-BIGEUM,목포연안 ↔ 비금, Mokpo – Bigeum,JN-MP-001,비금도,,목포권,○○해운,"061-XXX-XXXX","http://example.com",정기여객,,120,동·하절기구분,Y,"목포 북항 출발편과 구분 필요"
+RT-WANDO-JEJU,완도 ↔ 제주, Wando – Jeju,JN-WD-001,제주도,,완도권,한일고속,"1577-8665","https://hanilexpress.co.kr",정기여객,115,150,연중,Y,"카페리/쾌속선 시간표 구분"
+RT-YEOSU-GEOMUNDO,여수연안 ↔ 거문도, Yeosu – Geomun-do,JN-YS-001,거문도,백도,여수권,○○해운,"061-XXX-XXXX","http://example.com",정기여객,,150,동·하절기구분,Y,"백도 관광수요 많음"
+
+RT-GARONG-SINI,가룡 ↔ 신의(송도·병풍),Garong – Sini (via Songdo & Byeongpung),JN-SA-002,신의도,"송도, 병풍도",신안권,슬로시티6호,"061-262-4211","",도서민생활항로,,60,동절기/하절기 구분,Y,"차도선, 가룡–고이–선도–마산–신월–신의 순으로 기항(시간표는 동절기 기준)"
+RT-AMTAE-BIGEUM,암태(남강) ↔ 비금(가산),Amtae (Namgang) – Bigeum (Gasan),JN-SA-001,비금도,,신안권,비금농협·대흥페리,"061-244-5251 / 061-271-9917","",도서민생활항로,,40,연중,Y,"암태 남강선착장–비금 가산여객선터미널, 기본 운항시간 40분(표 기준)"
+
+
+
+정기운항시간표 가룡 timetables
+route_code,season,weekday_type,trip_no,depart_time,arrive_time,depart_terminal_code,arrive_place,notes,use_yn
+RT-GARONG-SINI,동절기,매일,1,07:20,09:00,JN-SA-002,"신의도(송도·병풍 경유)","",Y
+RT-GARONG-SINI,동절기,매일,1-1,07:40,09:00,JN-SA-003,"신의도(송도·병풍 경유)","기성 출발",Y
+RT-GARONG-SINI,동절기,매일,1-2,08:00,09:00,JN-SA-003,"신의도(송도·병풍 경유)","마산 출발",Y
+RT-GARONG-SINI,동절기,매일,1-3,08:15,09:00,JN-SA-003,"신의도(송도·병풍 경유)","선도 출발",Y
+RT-GARONG-SINI,동절기,매일,1-4,08:35,09:00,JN-SA-003,"신월 출발","",Y
+RT-GARONG-SINI,동절기,매일,1-5,08:45,09:00,JN-SA-003,"고이 출발","",Y
+
+RT-GARONG-SINI,동절기,매일,2,10:40,12:21,JN-SA-002,"신의도(송도·병풍 경유)","",Y
+RT-GARONG-SINI,동절기,매일,2-1,10:58,12:21,JN-SA-003,"고이 출발","",Y
+RT-GARONG-SINI,동절기,매일,2-2,11:13,12:21,JN-SA-003,"신월 출발","",Y
+RT-GARONG-SINI,동절기,매일,2-3,11:29,12:21,JN-SA-003,"선도 출발","",Y
+RT-GARONG-SINI,동절기,매일,2-4,11:44,12:21,JN-SA-003,"마산 출발","",Y
+RT-GARONG-SINI,동절기,매일,2-5,12:04,12:21,JN-SA-003,"기섬 출발","",Y
+
+RT-GARONG-SINI,동절기,매일,3,14:00,15:40,JN-SA-002,"신의도(송도·병풍 경유)","",Y
+RT-GARONG-SINI,동절기,매일,3-1,14:20,15:40,JN-SA-003,"기성 출발","",Y
+RT-GARONG-SINI,동절기,매일,3-2,14:40,15:40,JN-SA-003,"마산 출발","",Y
+RT-GARONG-SINI,동절기,매일,3-3,14:55,15:40,JN-SA-003,"선도 출발","",Y
+RT-GARONG-SINI,동절기,매일,3-4,15:15,15:40,JN-SA-003,"신월 출발","",Y
+RT-GARONG-SINI,동절기,매일,3-5,15:25,15:40,JN-SA-003,"고이 출발","",Y
+
+RT-GARONG-SINI,동절기,매일,4,16:00,17:41,JN-SA-002,"신의도(송도·병풍 경유)","",Y
+RT-GARONG-SINI,동절기,매일,4-1,16:18,17:41,JN-SA-003,"고이 출발","",Y
+RT-GARONG-SINI,동절기,매일,4-2,16:33,17:41,JN-SA-003,"신월 출발","",Y
+RT-GARONG-SINI,동절기,매일,4-3,16:49,17:41,JN-SA-003,"선도 출발","",Y
+RT-GARONG-SINI,동절기,매일,4-4,17:04,17:41,JN-SA-003,"마산 출발","",Y
+RT-GARONG-SINI,동절기,매일,4-5,17:24,17:41,JN-SA-003,"기섬 출발","",Y
+
+
+
+정기운항시간표 남강-가산 timetables
+route_code,season,weekday_type,trip_no,depart_time,arrive_time,depart_terminal_code,arrive_place,notes,use_yn
+RT-AMTAE-BIGEUM,연중,매일,1,05:50,06:30,JN-SA-004,"암태 남강",도초/목포 출발편,Y
+RT-AMTAE-BIGEUM,연중,매일,1,06:40,07:20,JN-SA-001,"비금 가산","수치 06:15 출발 경유",Y
+
+RT-AMTAE-BIGEUM,연중,매일,2,07:00,07:40,JN-SA-001,"비금 가산","",Y
+RT-AMTAE-BIGEUM,연중,매일,2,07:00,07:40,JN-SA-004,"암태 남강","",Y
+
+RT-AMTAE-BIGEUM,연중,매일,3,07:00,07:40,JN-SA-001,"비금 가산","",Y
+
+RT-AMTAE-BIGEUM,연중,매일,4,08:00,08:40,JN-SA-001,"비금 가산","",Y
+RT-AMTAE-BIGEUM,연중,매일,4,08:00,08:40,JN-SA-004,"암태 남강","",Y
+
+RT-AMTAE-BIGEUM,연중,매일,5,09:00,09:40,JN-SA-001,"비금 가산","",Y
+RT-AMTAE-BIGEUM,연중,매일,5,09:00,09:40,JN-SA-004,"암태 남강","",Y
+
+RT-AMTAE-BIGEUM,연중,매일,6,08:45,09:25,JN-SA-004,"암태 남강","도초행(도초까지 운항)",Y
+RT-AMTAE-BIGEUM,연중,매일,6,10:00,10:40,JN-SA-001,"비금 가산","",Y
+
+RT-AMTAE-BIGEUM,연중,매일,7,10:30,11:10,JN-SA-001,"비금 가산","",Y
+
+RT-AMTAE-BIGEUM,연중,매일,8,11:20,12:00,JN-SA-004,"암태 남강","",Y
+RT-AMTAE-BIGEUM,연중,매일,8,11:30,12:10,JN-SA-001,"비금 가산","",Y
+
+RT-AMTAE-BIGEUM,연중,매일,9,12:30,13:10,JN-SA-001,"비금 가산","수치 13:05 경유",Y
+
+RT-AMTAE-BIGEUM,연중,매일,10,12:30,13:10,JN-SA-004,"암태 남강","수치 13:45 경유",Y
+
+RT-AMTAE-BIGEUM,연중,매일,11,14:00,14:40,JN-SA-001,"비금 가산","",Y
+
+RT-AMTAE-BIGEUM,연중,매일,12,15:00,15:40,JN-SA-004,"암태 남강","",Y
+RT-AMTAE-BIGEUM,연중,매일,12,15:35,16:15,JN-SA-001,"비금 가산","",Y
+
+RT-AMTAE-BIGEUM,연중,매일,13,15:00,15:40,JN-SA-001,"비금 가산","",Y
+RT-AMTAE-BIGEUM,연중,매일,13,16:00,16:40,JN-SA-004,"암태 남강","",Y
+
+RT-AMTAE-BIGEUM,연중,매일,14,16:20,17:35,JN-SA-004,"암태 남강","사치 16:55 경유 (목,금만)",Y
+
+RT-AMTAE-BIGEUM,연중,목·금,15,17:00,18:00,JN-SA-001,"비금 가산","수치 17:35 경유",Y
+
+RT-AMTAE-BIGEUM,연중,매일,16,18:30,19:10,JN-SA-004,"암태 남강","",Y
+RT-AMTAE-BIGEUM,연중,매일,16,19:20,20:00,JN-SA-001,"비금 가산","도초 야간편",Y
+
+RT-AMTAE-BIGEUM,연중,매일,17,19:15,19:55,JN-SA-004,"암태 남강","수치 20:20 경유",Y
+
+RT-AMTAE-BIGEUM,연중,매일,18,20:10,20:50,JN-SA-001,"비금 가산","야간편(도초까지)",Y
+
+RT-AMTAE-BIGEUM,연중,매일,19,22:00,22:50,JN-SA-001,"비금 가산","야간편",Y
+
+
+
+차량운임표 vehicle_fare.csv
+route_code,vehicle_type,normal_fare,island_fare,notes
+RT-GARONG-SINI,경차,8000,1000,""
+RT-GARONG-SINI,승용차,12000,2000,""
+RT-GARONG-SINI,승합차,12000,3000,""
+RT-GARONG-SINI,1톤용달차,12000,2000,""
+RT-GARONG-SINI,1.5톤화물차,12000,6000,""
+RT-GARONG-SINI,2.5톤화물차,20000,10000,""
+RT-GARONG-SINI,3.5톤화물차,30000,15000,""
+RT-GARONG-SINI,5톤화물차(단축),40000,20000,""
+RT-GARONG-SINI,5톤화물차(장축),50000,,""
+RT-GARONG-SINI,1톤화물차,60000,,""
+RT-GARONG-SINI,5톤화물차,70000,,""
+RT-GARONG-SINI,15톤화물차,80000,,""
+RT-GARONG-SINI,18톤화물차,100000,,""
+RT-GARONG-SINI,25톤화물차,120000,,""
+RT-GARONG-SINI,버스(중형),35000,,""
+RT-GARONG-SINI,버스(준대형),70000,,""
+RT-GARONG-SINI,버스(대형),150000,,""
+RT-GARONG-SINI,오토바이(125cc),1000,,""
+RT-GARONG-SINI,오토바이(250cc),3000,,""
+RT-GARONG-SINI,오토바이(250cc이상),5000,,""
+RT-GARONG-SINI,경운기,10000,,""
+RT-GARONG-SINI,이앙기,10000,,""
+RT-GARONG-SINI,콤바인,20000,,""
+RT-GARONG-SINI,지게차,20000,,""
+RT-GARONG-SINI,트랙터,20000,,""
+RT-GARONG-SINI,불도저(소),90000,,""
+RT-GARONG-SINI,불도저(중),120000,,""
+RT-GARONG-SINI,불도저(대),220000,,""
+RT-GARONG-SINI,미니포크레인,10000,,""
+RT-GARONG-SINI,포크레인02·03,80000,,""
+RT-GARONG-SINI,포크레인04·05,160000,,""
+RT-GARONG-SINI,포크레인06·07,160000,,""
+RT-GARONG-SINI,포크레인08·09,180000,,""
+RT-GARONG-SINI,포크레인10,220000,,""
+RT-GARONG-SINI,5톤카고,50000,,""
+RT-GARONG-SINI,23톤카고,150000,,""
+RT-GARONG-SINI,15톤덤프,80000,,""
+RT-GARONG-SINI,25톤덤프,120000,,""
+RT-GARONG-SINI,콤비(25인승),35000,,""
+
+route_code,vehicle_type,vehicle_subtype,tonnage,length_m,fare_oneway,fare_round,season_type,weekday_type,notes,use_yn
+RT-AMTAE-BIGEUM,승용차,경차,,3.5,15000,28000,연중,매일,,Y
+RT-AMTAE-BIGEUM,승용차,5인승,,4.5,20000,38000,연중,매일,,Y
+RT-AMTAE-BIGEUM,화물차,1톤,1.00,,30000,,연중,매일,"1톤 기준",Y
+RT-AMTAE-BIGEUM,화물차,2.5톤,2.50,,45000,,연중,매일,,Y
+RT-GARONG-SINI,승용차,경차,,3.5,16000,30000,연중,매일,,Y
+RT-GARONG-SINI,승용차,5인승,,4.5,21000,40000,연중,매일,,Y
+
+
+
+승객요금
+route_code,passenger_type,age_group,resident_type,discount_type,fare_oneway,fare_round,fuel_surcharge,port_fee,total_oneway,total_round,season_type,weekday_type,notes,use_yn
+RT-AMTAE-BIGEUM,성인,성인,일반,,8000,15000,1000,500,9500,18500,연중,매일,,Y
+RT-AMTAE-BIGEUM,소인,소인,일반,,4000,7500,500,300,4800,8300,연중,매일,,Y
+RT-AMTAE-BIGEUM,성인,성인,도서주민,도서민할인,5000,9000,0,0,5000,9000,연중,매일,"도서주민 할인요금",Y
+RT-GARONG-SINI,성인,성인,일반,,9000,17000,1000,500,10500,19500,연중,매일,,Y
+RT-GARONG-SINI,소인,소인,일반,,4500,8500,500,300,5300,9300,연중,매일,,Y
+RT-GARONG-SINI,경로,성인,일반,경로우대,6000,11000,1000,500,7500,13500,연중,매일,"만65세 이상",Y
