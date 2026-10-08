@@ -1,53 +1,57 @@
 <?php
-// api/terminals.php
-// 정식 스키마 기반 터미널 API
-
-function api_terminals($pdo, $region = null)
+function handle_terminals($method)
 {
-    // region 컬럼이 아직 테이블에 없으므로 WHERE 적용 X
-    // 필요한 경우 나중에 ALTER TABLE로 region 추가 가능
+    $pdo = db();
+    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-    $sql = "SELECT 
-                terminal_code,
-                name_ko,
-                name_en,
-                city,
-                eup_myeon,
-                ri,
-                terminal_type,
-                road_addr,
-                jibun_addr,
-                lat,
-                lng,
-                phone,
-                has_parking,
-                parking_note,
-                source_url,
-                memo,
-                created_at,
-                updated_at
-            FROM terminals
-            WHERE use_yn = 'Y'
-            ORDER BY city, name_ko";
-
-    $stmt = $pdo->query($sql);
-    $rows = $stmt->fetchAll();
-
-    // 표시용 종합 주소 만들기
-    foreach ($rows as &$r) {
-        $addr = [];
-
-        if (!empty($r['road_addr'])) {
-            $addr[] = $r['road_addr'];
+    if ($method === 'GET') {
+        if ($id) {
+            $stmt = $pdo->prepare('SELECT * FROM terminals WHERE id = ?');
+            $stmt->execute(array($id));
+            $t = $stmt->fetch();
+            if (!$t) fail('not_found', 404);
+            $p = $pdo->prepare('SELECT id, kind, file_name, caption FROM terminal_photos WHERE terminal_id = ? ORDER BY id');
+            $p->execute(array($id));
+            $f = $pdo->prepare('SELECT id, route_name, category, item_name, price, note, source FROM fares WHERE terminal_id = ? ORDER BY route_name, FIELD(category,"person","vehicle","other"), price');
+            $f->execute(array($id));
+            $t['photos'] = $p->fetchAll();
+            $t['fares']  = $f->fetchAll();
+            json_out($t);
         }
-        if (!empty($r['jibun_addr'])) {
-            $addr[] = "(" . $r['jibun_addr'] . ")";
-        }
-
-        $r['address_display'] = implode(' ', $addr);
+        $rows = $pdo->query('SELECT id, name, city, address, lat, lng, phone FROM terminals ORDER BY name')->fetchAll();
+        json_out($rows);
     }
 
-    echo json_encode($rows, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-}
+    require_admin();
 
- ?>
+    if ($method === 'POST') {
+        $d = body_json();
+        $name = trim(isset($d['name']) ? $d['name'] : '');
+        if ($name === '' || !isset($d['lat'], $d['lng']) || !is_numeric($d['lat']) || !is_numeric($d['lng'])) {
+            fail('name, lat, lng are required');
+        }
+        $vals = array($name, trim(isset($d['city']) ? $d['city'] : ''), trim(isset($d['address']) ? $d['address'] : ''),
+                      (float)$d['lat'], (float)$d['lng'], trim(isset($d['phone']) ? $d['phone'] : ''), isset($d['memo']) ? $d['memo'] : '');
+        if ($id) {
+            $vals[] = $id;
+            $pdo->prepare('UPDATE terminals SET name=?, city=?, address=?, lat=?, lng=?, phone=?, memo=? WHERE id=?')->execute($vals);
+        } else {
+            $pdo->prepare('INSERT INTO terminals (name, city, address, lat, lng, phone, memo) VALUES (?,?,?,?,?,?,?)')->execute($vals);
+            $id = (int)$pdo->lastInsertId();
+        }
+        json_out(array('id' => $id));
+    }
+
+    if ($method === 'DELETE') {
+        if (!$id) fail('id required');
+        $p = $pdo->prepare('SELECT file_name FROM terminal_photos WHERE terminal_id = ?');
+        $p->execute(array($id));
+        foreach ($p->fetchAll() as $row) {
+            @unlink(upload_dir() . '/' . $row['file_name']);
+        }
+        $pdo->prepare('DELETE FROM terminals WHERE id = ?')->execute(array($id));
+        json_out(array('ok' => true));
+    }
+
+    fail('method_not_allowed', 405);
+}

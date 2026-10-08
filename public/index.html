@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전남 여객선 터미널</title>
+<style>
+  :root { --bg:#fff; --fg:#1b2733; --muted:#6b7a89; --line:#e3e8ee; --accent:#0b6bcb; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#10161d; --fg:#e6edf3; --muted:#8b98a5; --line:#26303b; --accent:#58a6ff; } }
+  * { box-sizing: border-box; }
+  html, body { height:100%; margin:0; background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, -apple-system, "Noto Sans KR", sans-serif; }
+  #map { position:absolute; inset:0; }
+  #search { position:absolute; z-index:5; top:12px; left:12px; right:12px; max-width:420px; display:flex; gap:6px; }
+  #search input { flex:1; padding:11px 14px; border:1px solid var(--line); border-radius:10px; background:var(--bg); color:var(--fg); font-size:15px; box-shadow:0 2px 8px #0003; }
+  #results { position:absolute; z-index:5; top:60px; left:12px; right:12px; max-width:420px; background:var(--bg); border-radius:10px; box-shadow:0 2px 8px #0003; max-height:40vh; overflow:auto; }
+  #results button { display:block; width:100%; text-align:left; padding:10px 14px; background:none; border:0; border-bottom:1px solid var(--line); color:var(--fg); font-size:14px; cursor:pointer; }
+  #panel { position:absolute; z-index:6; left:0; right:0; bottom:0; max-height:70vh; overflow:auto; background:var(--bg); border-radius:16px 16px 0 0; box-shadow:0 -4px 16px #0004; padding:16px; display:none; }
+  @media (min-width: 800px) { #panel { left:12px; right:auto; bottom:12px; top:auto; width:400px; border-radius:16px; } }
+  #panel h2 { margin:0 28px 2px 0; font-size:19px; }
+  #panel .sub { color:var(--muted); font-size:13px; }
+  #close { position:absolute; top:10px; right:12px; background:none; border:0; font-size:24px; color:var(--muted); cursor:pointer; }
+  .row { margin:10px 0; }
+  .btns { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+  .btn { display:inline-block; padding:9px 14px; border-radius:9px; border:1px solid var(--line); color:var(--fg); text-decoration:none; font-size:14px; background:none; cursor:pointer; }
+  .btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .photos { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; }
+  .photos img { height:110px; border-radius:8px; border:1px solid var(--line); cursor:zoom-in; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td, th { padding:6px 4px; border-bottom:1px solid var(--line); text-align:left; }
+  td.p { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  h3 { margin:16px 0 4px; font-size:14px; color:var(--muted); }
+  #msg { position:absolute; z-index:4; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; padding:20px; color:var(--muted); }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="msg">지도를 불러오는 중…</div>
+<div id="search"><input id="q" type="search" placeholder="터미널 이름·지역 검색"></div>
+<div id="results" hidden></div>
+<div id="panel"><button id="close" aria-label="닫기">×</button><div id="detail"></div></div>
+<script src="common.js"></script>
+<script>
+let map, terminals = [], markers = new Map();
+
+(async function init() {
+  const msg = document.getElementById('msg');
+  try {
+    const cfg = await api('config');
+    await loadKakao(cfg.kakao_js_key);
+    terminals = await api('terminals');
+  } catch (e) { msg.textContent = e.message; return; }
+  msg.remove();
+
+  map = new kakao.maps.Map(document.getElementById('map'), { center: new kakao.maps.LatLng(...DEFAULT_CENTER), level: 10 });
+  const bounds = new kakao.maps.LatLngBounds();
+  terminals.forEach(t => {
+    const pos = new kakao.maps.LatLng(t.lat, t.lng);
+    const mk = new kakao.maps.Marker({ position: pos, map, title: t.name });
+    kakao.maps.event.addListener(mk, 'click', () => openTerminal(t.id));
+    markers.set(t.id, mk);
+    bounds.extend(pos);
+  });
+  if (terminals.length) map.setBounds(bounds);
+
+  const hash = parseInt(location.hash.slice(1), 10);
+  if (hash) openTerminal(hash);
+})();
+
+async function openTerminal(id) {
+  const t = await api('terminals', { params: { id } });
+  location.hash = id;
+  map.panTo(new kakao.maps.LatLng(t.lat, t.lng));
+  const name = encodeURIComponent(t.name);
+  const web = `https://map.kakao.com/link/to/${name},${t.lat},${t.lng}`;
+  const app = `kakaomap://route?ep=${t.lat},${t.lng}&by=CAR`;
+
+  const byRoute = {};
+  t.fares.forEach(f => { (byRoute[f.route_name || ''] ??= []).push(f); });
+  const fareHtml = t.fares.length
+    ? Object.entries(byRoute).map(([route, list]) => `
+        <h3>${esc(route || '운임')}</h3>
+        <table>${['person','vehicle','other'].map(c => list.filter(f => f.category === c).map((f, i) => `
+          <tr><th>${i === 0 ? CAT_LABEL[c] : ''}</th><td>${esc(f.item_name)}${f.note ? ` <span class="sub">${esc(f.note)}</span>` : ''}</td><td class="p">${won(f.price)}</td></tr>`).join('')).join('')}
+        </table>`).join('')
+    : '<p class="sub">등록된 운임 정보가 없습니다.</p>';
+
+  const photos = t.photos.map(p => `<a href="../uploads/${esc(p.file_name)}" target="_blank"><img loading="lazy" src="../uploads/${esc(p.file_name)}" alt="${esc(p.caption || t.name)}"></a>`).join('');
+
+  document.getElementById('detail').innerHTML = `
+    <h2>${esc(t.name)}</h2>
+    <div class="sub">${esc([t.city, t.address].filter(Boolean).join(' · '))}</div>
+    <div class="btns">
+      <a class="btn primary" href="${web}" target="_blank" rel="noopener">길찾기 (카카오맵)</a>
+      <a class="btn" href="${app}" id="appLink">앱으로 열기</a>
+      ${t.phone ? `<a class="btn" href="tel:${esc(t.phone)}">${esc(t.phone)}</a>` : ''}
+    </div>
+    ${t.memo ? `<div class="row">${esc(t.memo).replace(/\n/g, '<br>')}</div>` : ''}
+    ${photos ? `<div class="photos">${photos}</div>` : ''}
+    ${fareHtml}`;
+  document.getElementById('panel').style.display = 'block';
+}
+
+document.getElementById('close').onclick = () => { document.getElementById('panel').style.display = 'none'; history.replaceState(null, '', location.pathname); };
+
+const q = document.getElementById('q'), results = document.getElementById('results');
+q.addEventListener('input', () => {
+  const k = q.value.trim();
+  if (!k) { results.hidden = true; return; }
+  const hits = terminals.filter(t => (t.name + (t.city || '') + (t.address || '')).includes(k)).slice(0, 20);
+  results.innerHTML = hits.map(t => `<button data-id="${t.id}">${esc(t.name)} <span class="sub">${esc(t.city || '')}</span></button>`).join('') || '<button disabled>결과 없음</button>';
+  results.hidden = false;
+});
+results.addEventListener('click', e => {
+  const b = e.target.closest('button[data-id]'); if (!b) return;
+  results.hidden = true; openTerminal(+b.dataset.id);
+});
+</script>
+</body>
+</html>

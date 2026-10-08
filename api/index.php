@@ -1,46 +1,33 @@
 <?php
-
-// /ferry/api/index.php
-header('Content-Type: application/json; charset=utf-8');
+// 라우터: /api/index.php?r=<resource>
+require __DIR__ . '/lib.php';
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: Content-Type, X-Admin-Token');
+header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { exit; }
 
-require_once __DIR__ . '/config.php';
+$r = isset($_GET['r']) ? $_GET['r'] : '';
+$m = $_SERVER['REQUEST_METHOD'];
 
-$resource = isset($_GET['resource']) ? $_GET['resource'] : '';
-$terminal = isset($_GET['terminal']) ? $_GET['terminal'] : null;
-$date     = isset($_GET['date']) ? $_GET['date'] : null;
-$region   = isset($_GET['region']) ? $_GET['region'] : null;
-
-switch ($resource) {
-    case 'terminals':
-        require_once __DIR__ . '/terminals.php';
-        api_terminals($pdo, $region);
-        break;
-
-    case 'routes':
-        require_once __DIR__ . '/routes.php';
-        api_routes($pdo);
-        break;
-
-    case 'timetables':
-        require_once __DIR__ . '/timetables.php';
-        api_timetables($pdo, $terminal, $date);
-        break;
-
-    case 'realtime':
-        require __DIR__ . '/realtime.php';
-        api_realtime($pdo, $terminal);
-        break;
-
-    case 'all':
-        require_once __DIR__ . '/all.php';
-        api_all($pdo, $terminal, $region, $date);
-        break;
-
-    default:
-        echo json_encode([
-            'error'   => 'invalid_resource',
-            'message' => 'use ?resource=terminals|routes|timetables|all'
-        ], JSON_UNESCAPED_UNICODE);
+try {
+    switch ($r) {
+        case 'config':
+            json_out(array('kakao_js_key' => $config['kakao_js_key'], 'ocr_enabled' => $config['anthropic_key'] !== ''));
+        case 'terminals':
+            require __DIR__ . '/terminals.php';
+            handle_terminals($m);
+        case 'photos':
+            require __DIR__ . '/photos.php';
+            handle_photos($m);
+        case 'fares':
+            require __DIR__ . '/fares.php';
+            handle_fares($m);
+        case 'fares_ocr':
+            require __DIR__ . '/fares_ocr.php';
+            handle_fares_ocr($m);
+        default:
+            fail('unknown resource: use r=config|terminals|photos|fares|fares_ocr', 404);
+    }
+} catch (PDOException $e) {
+    fail('db_error', 500);
 }
-?>
